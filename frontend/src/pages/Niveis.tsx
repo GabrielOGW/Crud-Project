@@ -1,5 +1,8 @@
 import { useState } from "react";
 import {
+  Box,
+  Button,
+  ButtonGroup,
   Container,
   Heading,
   Table,
@@ -19,6 +22,9 @@ interface Nivel {
 }
 
 function Niveis() {
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 3;
+
   const [sortingCriteria, setSortingCriteria] = useState<keyof Nivel | null>(
     null
   );
@@ -54,6 +60,10 @@ function Niveis() {
     return 0;
   });
 
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = sortedData.slice(startIndex, endIndex);
+
   return (
     <Container maxW="container.lg">
       <Heading size="lg" mb={4}>
@@ -75,7 +85,7 @@ function Niveis() {
           </Tr>
         </Thead>
         <Tbody>
-          {sortedData.map((nivel) => (
+          {paginatedData.map((nivel) => (
             <Tr key={nivel.id}>
               <Td>{nivel.id}</Td>
               <Td>{nivel.nivel}</Td>
@@ -89,6 +99,22 @@ function Niveis() {
       <Text mt={4}>
         <AddNivelModal />
       </Text>
+      <Box display="flex" justifyContent="center" mt={4}>
+        <ButtonGroup variant="outline" size="sm">
+          <Button
+            isDisabled={currentPage === 0}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Previous
+          </Button>
+          <Button
+            isDisabled={endIndex >= sortedData.length}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </Button>
+        </ButtonGroup>
+      </Box>
     </Container>
   );
 }

@@ -9,7 +9,6 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import AddDevModal from "../components/AddDevModal";
 import EditDevModal from "../components/EditDevModal";
 
@@ -24,10 +23,6 @@ interface Devs {
 }
 
 function Devs() {
-  const [sortingCriteria, setSortingCriteria] = useState<keyof Devs | null>(
-    null
-  );
-  const [sortingDirection, setSortingDirection] = useState(1);
 
   const data: Devs[] = [
     {
