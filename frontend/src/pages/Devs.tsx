@@ -1,4 +1,7 @@
 import {
+  Box,
+  Button,
+  ButtonGroup,
   Container,
   Heading,
   Table,
@@ -9,6 +12,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import AddDevModal from "../components/AddDevModal";
 import EditDevModal from "../components/EditDevModal";
 
@@ -23,7 +27,6 @@ interface Devs {
 }
 
 function Devs() {
-
   const data: Devs[] = [
     {
       id: 1,
@@ -99,6 +102,35 @@ function Devs() {
     },
   ];
 
+  const [sortBy, setSortBy] = useState<{ key: keyof Devs; ascending: boolean }>(
+    { key: "id", ascending: true }
+  );
+
+  const sortedData = [...data].sort((a, b) => {
+    const compareResult =
+      a[sortBy.key] < b[sortBy.key]
+        ? -1
+        : a[sortBy.key] > b[sortBy.key]
+        ? 1
+        : 0;
+    return sortBy.ascending ? compareResult : -compareResult;
+  });
+
+  const handleSort = (key: keyof Devs) => {
+    if (sortBy.key === key) {
+      setSortBy({ ...sortBy, ascending: !sortBy.ascending });
+    } else {
+      setSortBy({ key, ascending: true });
+    }
+  };
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 4;
+  
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = sortedData.slice(startIndex, endIndex);
+
   return (
     <Container maxW="container.lg">
       <Heading size="lg" mb={5}>
@@ -107,18 +139,53 @@ function Devs() {
       <Table variant="simple" colorScheme="gray">
         <Thead>
           <Tr>
-            <Th _hover={{ cursor: "pointer" }}>ID</Th>
-            <Th _hover={{ cursor: "pointer" }}>Nome</Th>
-            <Th _hover={{ cursor: "pointer" }}>Sexo</Th>
-            <Th _hover={{ cursor: "pointer" }}>Data de Nascimento</Th>
-            <Th _hover={{ cursor: "pointer" }}>Idade</Th>
-            <Th _hover={{ cursor: "pointer" }}>Hobby</Th>
-            <Th _hover={{ cursor: "pointer" }}>Nivel</Th>
+            <Th
+              _hover={{ cursor: "pointer" }}
+              onClick={() => handleSort("id")}
+            >
+              ID
+            </Th>
+            <Th
+              _hover={{ cursor: "pointer" }}
+              onClick={() => handleSort("nome")}
+            >
+              Nome
+            </Th>
+            <Th
+              _hover={{ cursor: "pointer" }}
+              onClick={() => handleSort("sexo")}
+            >
+              Sexo
+            </Th>
+            <Th
+              _hover={{ cursor: "pointer" }}
+              onClick={() => handleSort("data_nascimento")}
+            >
+              Data de Nascimento
+            </Th>
+            <Th
+              _hover={{ cursor: "pointer" }}
+              onClick={() => handleSort("idade")}
+            >
+              Idade
+            </Th>
+            <Th
+              _hover={{ cursor: "pointer" }}
+              onClick={() => handleSort("hobby")}
+            >
+              Hobby
+            </Th>
+            <Th
+              _hover={{ cursor: "pointer" }}
+              onClick={() => handleSort("nivel")}
+            >
+              Nivel
+            </Th>
             <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((dev) => (
+          {paginatedData.map((dev) => (
             <Tr key={dev.id}>
               <Td>{dev.id}</Td>
               <Td>{dev.nome}</Td>
@@ -137,6 +204,22 @@ function Devs() {
       <Text mt={4}>
         <AddDevModal />
       </Text>
+      <Box display="flex" justifyContent="center" mt={4}>
+        <ButtonGroup variant="outline" size="sm">
+          <Button
+            isDisabled={currentPage === 0}
+            onClick={() => setCurrentPage(currentPage - 1)}
+          >
+            Previous
+          </Button>
+          <Button
+            isDisabled={endIndex >= sortedData.length}
+            onClick={() => setCurrentPage(currentPage + 1)}
+          >
+            Next
+          </Button>
+        </ButtonGroup>
+      </Box>
     </Container>
   );
 }

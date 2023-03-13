@@ -23,7 +23,7 @@ interface Nivel {
 
 function Niveis() {
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 3;
+  const itemsPerPage = 4;
 
   const [sortingCriteria, setSortingCriteria] = useState<keyof Nivel | null>(
     null
