@@ -18,17 +18,17 @@ export class DevController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.devService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.devService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDevDto: UpdateDevDto) {
-    return this.devService.update(+id, updateDevDto);
+  update(@Param('id') id: number, @Body() updateDevDto: UpdateDevDto) {
+    return this.devService.update(id, updateDevDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.devService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.devService.remove(id);
   }
 }
