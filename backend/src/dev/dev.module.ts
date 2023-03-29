@@ -5,8 +5,8 @@ import { DatabaseModule } from 'src/database/database.module';
 import { DevProviders } from './dev.providers';
 
 @Module({
-  controllers: [DevController],
   imports: [DatabaseModule],
+  controllers: [DevController],
   providers: [...DevProviders, DevService],
 })
 export class DevModule {}

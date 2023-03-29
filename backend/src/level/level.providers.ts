@@ -1,10 +1,10 @@
 import { DataSource } from 'typeorm';
 import { Level } from './entities/level.entity';
 
-export const LevelProviders = [
+export const levelProviders = [
   {
     provide: 'LEVEL_REPOSITORY',
-    useFactory: (DataSource: DataSource) => DataSource.getRepository(Level),
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(Level),
     inject: ['DATA_SOURCE'],
   },
 ];

@@ -19,16 +19,16 @@ export class LevelController {
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.levelService.findOne(id);
+    return this.levelService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateLevelDto: UpdateLevelDto) {
-    return this.levelService.update(id, updateLevelDto);
+    return this.levelService.update(+id, updateLevelDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: number) {
-    return this.levelService.remove(id);
+    return this.levelService.remove(+id);
   }
 }

@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import { Dev } from 'src/dev/entities/dev.entity';
 
-@Entity()
+@Entity('levels')
 export class Level {
   @PrimaryGeneratedColumn()
   id: number;
