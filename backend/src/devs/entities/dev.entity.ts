@@ -1,5 +1,4 @@
-import { Exclude } from 'class-transformer';
-import { Level } from 'src/level/entities/level.entity';
+import { Nivel } from 'src/nivel/entities/nivel.entity';
 import {
   Entity,
   Column,
@@ -28,11 +27,10 @@ export class Dev {
   @Column()
   hobby: string;
 
-  @Exclude()
   @Column()
-  level_id: number;
+  nivel_id: number;
 
-  @ManyToOne(() => Level, (level) => level.developers)
-  @JoinColumn({ name: 'level_id' })
-  level?: Level;
+  @ManyToOne(() => Nivel, (nivel) => nivel.devs)
+  @JoinColumn({ name: 'nivel_id' })
+  nivel?: Nivel;
 }

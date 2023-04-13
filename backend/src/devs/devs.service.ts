@@ -1,25 +1,25 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDevDto } from './dto/create-dev.dto';
 import { UpdateDevDto } from './dto/update-dev.dto';
+import { Repository } from 'typeorm';
 import { Dev } from './entities/dev.entity';
 
 @Injectable()
-export class DevService {
+export class DevsService {
   constructor(
-    @Inject('DEV_REPOSITORY')
+    @InjectRepository(Dev)
     private DevRepository: Repository<Dev>,
   ) {}
-  
   create(createDevDto: CreateDevDto) {
     return this.DevRepository.save(createDevDto);
   }
 
-  findAll() {
+  findAll(): Promise<Dev[]> {
     return this.DevRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<Dev | null> {
     return this.DevRepository.findOne({ where: { id } });
   }
 
@@ -27,7 +27,7 @@ export class DevService {
     return this.DevRepository.update(id, updateDevDto);
   }
 
-  remove(id: number) {
-    return this.DevRepository.delete(id);
+  async remove(id: number): Promise<void> {
+    await this.DevRepository.delete(id);
   }
 }

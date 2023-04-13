@@ -1,12 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DevModule } from './dev/dev.module';
-import { LevelModule } from './level/level.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Nivel } from './nivel/entities/nivel.entity';
+import { Dev } from './devs/entities/dev.entity';
 
 @Module({
-  imports: [DevModule, LevelModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'password',
+      database: 'crud',
+      entities: [Nivel, Dev],
+      synchronize: true,
+    }),
+  ],
 })
 export class AppModule {}
