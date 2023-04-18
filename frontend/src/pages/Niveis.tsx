@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -24,23 +24,25 @@ interface Nivel {
 function Niveis() {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
-
   const [sortingCriteria, setSortingCriteria] = useState<keyof Nivel | null>(
     null
   );
   const [sortingDirection, setSortingDirection] = useState(1);
 
-  const data: Nivel[] = [
-    { id: 1, nivel: "senior a" },
-    { id: 2, nivel: "pleno a" },
-    { id: 3, nivel: "junior a" },
-    { id: 5, nivel: "pleno b" },
-    { id: 6, nivel: "junior b" },
-    { id: 7, nivel: "senior c" },
-    { id: 4, nivel: "senior b" },
-    { id: 8, nivel: "pleno c" },
-    { id: 9, nivel: "junior c" },
-  ];
+  const [data, setData] = useState<Nivel[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/nivel");
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSort = (criteria: keyof Nivel) => {
     if (sortingCriteria === criteria) {
