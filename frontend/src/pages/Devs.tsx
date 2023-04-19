@@ -132,7 +132,7 @@ function Devs() {
               <Td>{devs.hobby}</Td>
               <Td>{devs.nivel}</Td>
               <Td>
-                <EditDevModal />
+                <EditDevModal devId={devs.id} />
               </Td>
             </Tr>
           ))}
