@@ -14,18 +14,34 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function EditDevModal({ devId }: { devId: number }) {
+export default function EditDevModal({
+  devId,
+  devNome,
+  devSexo,
+  devData,
+  devIdade,
+  devHobby,
+  devNivel,
+}: {
+  devId: number;
+  devNome: string;
+  devSexo: string;
+  devData: Date;
+  devIdade: number;
+  devHobby: string;
+  devNivel: string;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
-  const [newNome, setNewNome] = useState("");
-  const [newSexo, setNewSexo] = useState("");
-  const [newDataNascimento, setNewDataNascimento] = useState("");
-  const [newIdade, setNewIdade] = useState("");
-  const [newHobby, setNewHobby] = useState("");
-  const [newNivel, setNewNivel] = useState("");
+  const [newNome, setNewNome] = useState<string>(devNome);
+  const [newSexo, setNewSexo] = useState<string>(devSexo);
+  const [newDataNascimento, setNewDataNascimento] = useState<Date>(devData);
+  const [newIdade, setNewIdade] = useState<number>(devIdade);
+  const [newHobby, setNewHobby] = useState<string>(devHobby);
+  const [newNivel, setNewNivel] = useState<string>(devNivel);
 
   const handleUpdate = async () => {
     try {
@@ -44,19 +60,19 @@ export default function EditDevModal({ devId }: { devId: number }) {
       if (response.ok) {
         console.log(response);
         toast({
-          title: "Nivel alterado.",
+          title: "Desenvolvedor alterado.",
           status: "success",
           duration: 5000,
           isClosable: true,
         });
         onClose();
       } else {
-        throw new Error("Failed to update nivel");
+        throw new Error("Failed to update dev");
       }
     } catch (error) {
       console.error(error);
       toast({
-        title: "Erro ao alterar nivel.",
+        title: "Erro ao alterar Dev.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -78,7 +94,7 @@ export default function EditDevModal({ devId }: { devId: number }) {
       if (response.ok) {
         console.log(response);
         toast({
-          title: "Nivel excluido.",
+          title: "Desenvolvedor excluido.",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -90,7 +106,7 @@ export default function EditDevModal({ devId }: { devId: number }) {
     } catch (error) {
       console.error(error);
       toast({
-        title: "Erro ao excluir nivel.",
+        title: "Erro ao excluir Dev.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -98,9 +114,29 @@ export default function EditDevModal({ devId }: { devId: number }) {
     }
   };
 
+  interface Nivel {
+    id: number;
+    nivel: string;
+  }
+
+  const [data, setData] = useState<Nivel[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/nivel");
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
-      <Button onClick={onOpen} size="sm">
+      <Button onClick={onOpen} size="sm" >
         Visualizar
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -125,15 +161,17 @@ export default function EditDevModal({ devId }: { devId: number }) {
               <FormLabel>Data de Nascimento</FormLabel>
               <Input
                 type="date"
-                value={newDataNascimento}
-                onChange={(e) => setNewDataNascimento(e.target.value)}
+                value={newDataNascimento.toISOString()}
+                onChange={(e) => setNewDataNascimento(new Date(e.target.value))}
               />
+
               <FormLabel>Idade</FormLabel>
               <Input
                 type="number"
                 value={newIdade}
-                onChange={(e) => setNewIdade(e.target.value)}
+                onChange={(e) => setNewIdade(parseInt(e.target.value))}
               />
+
               <FormLabel>Hobby</FormLabel>
               <Input
                 type="text"
@@ -141,15 +179,16 @@ export default function EditDevModal({ devId }: { devId: number }) {
                 onChange={(e) => setNewHobby(e.target.value)}
               />
               <FormLabel>Nivel</FormLabel>
-              <Select 
+              <Select
                 value={newNivel}
                 onChange={(e) => setNewNivel(e.target.value)}
               >
-                {/* {niveis.map((nivel) => (
-        <option key={nivel.id} value={nivel.id}>
-          {nivel.descricao}
-        </option>))} */}
-                </Select>
+                {data.map((nivel) => (
+                  <option key={nivel.id} value={nivel.id}>
+                    {nivel.nivel}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
           </ModalBody>
           <ModalFooter>

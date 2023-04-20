@@ -23,7 +23,7 @@ interface Devs {
   dataNascimento: string;
   idade: number;
   hobby: string;
-  nivel: string;
+  nivel_id: string;
 }
 
 function Devs() {
@@ -114,7 +114,7 @@ function Devs() {
             </Th>
             <Th
               _hover={{ cursor: "pointer" }}
-              onClick={() => handleSort("nivel")}
+              onClick={() => handleSort("nivel_id")}
             >
               Nivel
             </Th>
@@ -130,9 +130,17 @@ function Devs() {
               <Td>{devs.dataNascimento}</Td>
               <Td>{devs.idade}</Td>
               <Td>{devs.hobby}</Td>
-              <Td>{devs.nivel}</Td>
+              <Td>{devs.nivel_id}</Td>
               <Td>
-                <EditDevModal devId={devs.id} />
+                <EditDevModal
+                  devId={devs.id}
+                  devNome={devs.nome}
+                  devSexo={devs.sexo}
+                  devData={new Date(devs.dataNascimento)}
+                  devIdade={devs.idade}
+                  devHobby={devs.hobby}
+                  devNivel={devs.nivel_id}
+                />
               </Td>
             </Tr>
           ))}

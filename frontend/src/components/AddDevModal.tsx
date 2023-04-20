@@ -25,7 +25,7 @@ export default function AddDevModal() {
   const [dataNascimento, setDataNascimento] = useState("");
   const [idade, setIdade] = useState("");
   const [hobby, setHobby] = useState("");
-  const [level, setLevel] = useState("");
+  const [nivel_id, setNivel_id] = useState("");
 
   const handleSubmit = async () => {
     try {
@@ -40,7 +40,7 @@ export default function AddDevModal() {
           dataNascimento,
           idade,
           hobby,
-          level,
+          nivel_id,
         }),
       });
       if (response.ok) {
@@ -87,7 +87,7 @@ export default function AddDevModal() {
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="blue" size="sm">
+      <Button colorScheme="blue" size="sm" onClick={() => onOpen()} >
         Add Dev
       </Button>
 
@@ -112,9 +112,12 @@ export default function AddDevModal() {
               <FormLabel>Hobby</FormLabel>
               <Input type="text" onChange={(e) => setHobby(e.target.value)} />
               <FormLabel>Nivel</FormLabel>
-              <Select placeholder="Selecione o nível">
+              <Select
+                placeholder="Selecione o nível"
+                onChange={(e) => setNivel_id(e.target.value)}
+              >
                 {data.map((nivel) => (
-                  <option key={nivel.nivel} value={nivel.id}>
+                  <option key={nivel.id} value={nivel.id}>
                     {nivel.nivel}
                   </option>
                 ))}

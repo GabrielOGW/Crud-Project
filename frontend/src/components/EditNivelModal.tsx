@@ -15,10 +15,16 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-export default function EditNivelModal({ nivelId }: { nivelId: number }) {
+export default function EditNivelModal({
+  nivelId,
+  nivelName,
+}: {
+  nivelId: number;
+  nivelName: string;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const [newNivel, setNewNivel] = useState("");
+  const [newNivel, setNewNivel] = useState<string>(nivelName);
 
   const handleUpdate = async () => {
     try {
@@ -87,11 +93,11 @@ export default function EditNivelModal({ nivelId }: { nivelId: number }) {
 
   return (
     <>
-      <Button onClick={onOpen} size="sm" >
+      <Button onClick={onOpen} size="sm">
         Visualizar
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay /> 
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>Alterar Nivel</ModalHeader>
           <ModalCloseButton />

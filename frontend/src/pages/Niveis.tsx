@@ -92,7 +92,7 @@ function Niveis() {
               <Td>{nivel.id}</Td>
               <Td>{nivel.nivel}</Td>
               <Td>
-                <EditNivelModal nivelId={nivel.id} />
+                <EditNivelModal nivelId={nivel.id} nivelName={nivel.nivel} />
               </Td>
             </Tr>
           ))}
