@@ -20,7 +20,6 @@ export default function EditDevModal({
   devId,
   devNome,
   devSexo,
-  devData,
   devIdade,
   devHobby,
   devNivel,
@@ -28,7 +27,6 @@ export default function EditDevModal({
   devId: number;
   devNome: string;
   devSexo: string;
-  devData: Date;
   devIdade: number;
   devHobby: string;
   devNivel: string;
@@ -38,7 +36,7 @@ export default function EditDevModal({
 
   const [newNome, setNewNome] = useState<string>(devNome);
   const [newSexo, setNewSexo] = useState<string>(devSexo);
-  const [newDataNascimento, setNewDataNascimento] = useState<Date>(devData);
+  const [newDataNascimento, setNewDataNascimento] = useState("");
   const [newIdade, setNewIdade] = useState<number>(devIdade);
   const [newHobby, setNewHobby] = useState<string>(devHobby);
   const [newNivel, setNewNivel] = useState<string>(devNivel);
@@ -53,7 +51,12 @@ export default function EditDevModal({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            nivel: newNivel,
+            nome: newNome,
+            sexo: newSexo,
+            dataNascimento: newDataNascimento,
+            idade: newIdade,
+            hobby: newHobby,
+            nivel_id: newNivel,
           }),
         }
       );
@@ -136,11 +139,11 @@ export default function EditDevModal({
 
   return (
     <>
-      <Button onClick={onOpen} size="sm" >
+      <Button onClick={onOpen} size="sm">
         Visualizar
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+        <ModalOverlay backdropFilter="blur(1px)" />
         <ModalContent>
           <ModalHeader>Editar Desenvolvedor</ModalHeader>
           <ModalCloseButton />
@@ -161,8 +164,8 @@ export default function EditDevModal({
               <FormLabel>Data de Nascimento</FormLabel>
               <Input
                 type="date"
-                value={newDataNascimento.toISOString()}
-                onChange={(e) => setNewDataNascimento(new Date(e.target.value))}
+                value={newDataNascimento}
+                onChange={(e) => setNewDataNascimento(e.target.value)}
               />
 
               <FormLabel>Idade</FormLabel>

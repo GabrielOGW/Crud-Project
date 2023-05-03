@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Nivel } from 'src/nivel/entities/nivel.entity';
 import {
   Entity,
@@ -27,6 +28,7 @@ export class Dev {
   @Column()
   hobby: string;
 
+  @Exclude()
   @Column()
   nivel_id: number;
 

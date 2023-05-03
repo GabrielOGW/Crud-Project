@@ -97,7 +97,7 @@ export default function EditNivelModal({
         Visualizar
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+        <ModalOverlay backdropFilter="blur(1px)" />
         <ModalContent>
           <ModalHeader>Alterar Nivel</ModalHeader>
           <ModalCloseButton />

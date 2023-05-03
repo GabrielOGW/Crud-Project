@@ -87,12 +87,12 @@ export default function AddDevModal() {
 
   return (
     <>
-      <Button colorScheme="blue" size="sm" onClick={() => onOpen()} >
+      <Button colorScheme="blue" size="sm" onClick={() => onOpen()}>
         Add Dev
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+        <ModalOverlay backdropFilter="blur(1px)" />
         <ModalContent>
           <ModalHeader>Novo Desenvolvedor</ModalHeader>
           <ModalCloseButton />

@@ -66,7 +66,7 @@ export default function AddNivelModal() {
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
-              <FormLabel>Hobby</FormLabel>
+              <FormLabel>Nivel</FormLabel>
               <Input type="text" onChange={(e) => setNivel(e.target.value)} />
             </FormControl>
           </ModalBody>

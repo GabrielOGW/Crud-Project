@@ -12,7 +12,7 @@ import { DevsModule } from './devs/devs.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'password',
+      password: '',
       database: 'crud',
       entities: [Nivel, Dev],
       synchronize: true,

@@ -136,7 +136,6 @@ function Devs() {
                   devId={devs.id}
                   devNome={devs.nome}
                   devSexo={devs.sexo}
-                  devData={new Date(devs.dataNascimento)}
                   devIdade={devs.idade}
                   devHobby={devs.hobby}
                   devNivel={devs.nivel_id}
