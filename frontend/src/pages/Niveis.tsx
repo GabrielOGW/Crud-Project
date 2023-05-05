@@ -19,15 +19,12 @@ import EditNivelModal from "../components/EditNivelModal";
 interface Nivel {
   id: number;
   nivel: string;
+  devs: any;
 }
 
 function Niveis() {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
-  const [sortingCriteria, setSortingCriteria] = useState<keyof Nivel | null>(
-    null
-  );
-  const [sortingDirection, setSortingDirection] = useState(1);
 
   const [data, setData] = useState<Nivel[]>([]);
 
@@ -44,23 +41,28 @@ function Niveis() {
     fetchData();
   }, []);
 
-  const handleSort = (criteria: keyof Nivel) => {
-    if (sortingCriteria === criteria) {
-      setSortingDirection(sortingDirection * -1);
-    } else {
-      setSortingCriteria(criteria);
-      setSortingDirection(1);
-    }
-  };
+  const [sortBy, setSortBy] = useState<{
+    key: keyof Nivel;
+    ascending: boolean;
+  }>({ key: "id", ascending: true });
 
   const sortedData = [...data].sort((a, b) => {
-    if (sortingCriteria === "id") {
-      return (a.id - b.id) * sortingDirection;
-    } else if (sortingCriteria === "nivel") {
-      return a.nivel.localeCompare(b.nivel) * sortingDirection;
-    }
-    return 0;
+    const compareResult =
+      a[sortBy.key] < b[sortBy.key]
+        ? -1
+        : a[sortBy.key] > b[sortBy.key]
+        ? 1
+        : 0;
+    return sortBy.ascending ? compareResult : -compareResult;
   });
+
+  const handleSort = (key: keyof Nivel) => {
+    if (sortBy.key === key) {
+      setSortBy({ ...sortBy, ascending: !sortBy.ascending });
+    } else {
+      setSortBy({ key, ascending: true });
+    }
+  };
 
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -83,6 +85,12 @@ function Niveis() {
             >
               Nivel
             </Th>
+            <Th
+              onClick={() => handleSort("nivel")}
+              _hover={{ cursor: "pointer" }}
+            >
+              Desenvolvedores associados
+            </Th>
             <Th></Th>
           </Tr>
         </Thead>
@@ -91,6 +99,7 @@ function Niveis() {
             <Tr key={nivel.id}>
               <Td>{nivel.id}</Td>
               <Td>{nivel.nivel}</Td>
+              <Td>{nivel.devs.length}</Td>
               <Td>
                 <EditNivelModal nivelId={nivel.id} nivelName={nivel.nivel} />
               </Td>

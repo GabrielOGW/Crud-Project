@@ -19,7 +19,7 @@ export class Dev {
   @Column()
   sexo: string;
 
-  @Column()
+  @Column({ type: 'date' })
   dataNascimento: Date;
 
   @Column()
