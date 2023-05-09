@@ -15,6 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { Nivel } from "../interface/interfaces";
 
 export default function AddDevModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -65,11 +66,6 @@ export default function AddDevModal() {
     }
   };
 
-  interface Nivel {
-    id: number;
-    nivel: string;
-  }
-
   const [data, setData] = useState<Nivel[]>([]);
 
   useEffect(() => {
@@ -85,12 +81,24 @@ export default function AddDevModal() {
     fetchData();
   }, []);
 
+  const calcularIdade = (dataNascimento: string) => {
+    const dataNascimentoObj = new Date(dataNascimento);
+    const dataAtualObj = new Date();
+
+    const diferencaEmMilissegundos =
+      dataAtualObj.getTime() - dataNascimentoObj.getTime();
+    const idadeEmAnos = Math.floor(
+      diferencaEmMilissegundos / (1000 * 60 * 60 * 24 * 365)
+    );
+
+    setIdade(idadeEmAnos.toString());
+  };
+
   return (
     <>
       <Button colorScheme="blue" size="sm" onClick={() => onOpen()}>
         Add Dev
       </Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay backdropFilter="blur(1px)" />
         <ModalContent>
@@ -101,14 +109,24 @@ export default function AddDevModal() {
               <FormLabel>Nome</FormLabel>
               <Input type="text" onChange={(e) => setNome(e.target.value)} />
               <FormLabel>Sexo</FormLabel>
-              <Input type="text" onChange={(e) => setSexo(e.target.value)} />
+              <Select
+                placeholder="Informe o Sexo"
+                onChange={(e) => setSexo(e.target.value)}
+              >
+                <option value="Masc">Masc </option>
+                <option value="Fem">Fem </option>
+              </Select>
               <FormLabel>Data de Nascimento</FormLabel>
               <Input
                 type="date"
-                onChange={(e) => setDataNascimento(e.target.value)}
+                value={dataNascimento}
+                onChange={(e) => {
+                  setDataNascimento(e.target.value);
+                  calcularIdade(e.target.value);
+                }}
               />
               <FormLabel>Idade</FormLabel>
-              <Input type="number" onChange={(e) => setIdade(e.target.value)} />
+              <Input type="number" value={idade} readOnly />
               <FormLabel>Hobby</FormLabel>
               <Input type="text" onChange={(e) => setHobby(e.target.value)} />
               <FormLabel>Nivel</FormLabel>

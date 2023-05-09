@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import About from "./pages/About";
-import Devs from "./pages/Devs";
+import Dev from "./pages/Dev";
 import ErrorPage from "./pages/ErrorPage";
 import Niveis from "./pages/Niveis";
 
@@ -9,11 +9,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Navbar />,
-    errorElement: <ErrorPage/>,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/pages/Devs.tsx",
-        element: <Devs />,
+        element: <Dev />,
       },
       {
         path: "/pages/Niveis.tsx",

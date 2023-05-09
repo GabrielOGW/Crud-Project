@@ -2,32 +2,26 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Container,
-  Heading,
   Table,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import EditDevModal from "./EditDevModal";
+import { Devs } from "../interface/interfaces";
 import { useEffect, useState } from "react";
-import AddDevModal from "../components/AddDevModal";
-import EditDevModal from "../components/EditDevModal";
+import { useSortableData } from "./sortData";
 
-interface Devs {
-  id: number;
-  nome: string;
-  sexo: string;
-  dataNascimento: string;
-  idade: number;
-  hobby: string;
-  nivel_id: string;
-}
-
-function Devs() {
+export default function DevTable() {
   const [data, setData] = useState<Devs[]>([]);
+  const { sortedItems, handleSort } = useSortableData(data);
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 4;
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = sortedItems.slice(startIndex, endIndex);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,40 +36,8 @@ function Devs() {
     fetchData();
   }, []);
 
-  const [sortBy, setSortBy] = useState<{ key: keyof Devs; ascending: boolean }>(
-    { key: "id", ascending: true }
-  );
-
-  const sortedData = [...data].sort((a, b) => {
-    const compareResult =
-      a[sortBy.key] < b[sortBy.key]
-        ? -1
-        : a[sortBy.key] > b[sortBy.key]
-        ? 1
-        : 0;
-    return sortBy.ascending ? compareResult : -compareResult;
-  });
-
-  const handleSort = (key: keyof Devs) => {
-    if (sortBy.key === key) {
-      setSortBy({ ...sortBy, ascending: !sortBy.ascending });
-    } else {
-      setSortBy({ key, ascending: true });
-    }
-  };
-
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 4;
-
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = sortedData.slice(startIndex, endIndex);
-
   return (
-    <Container maxW="container.lg">
-      <Heading size="lg" mb={5}>
-        Devs
-      </Heading>
+    <>
       <Table variant="simple" colorScheme="gray">
         <Thead>
           <Tr>
@@ -136,7 +98,6 @@ function Devs() {
                   devId={devs.id}
                   devNome={devs.nome}
                   devSexo={devs.sexo}
-                  devIdade={devs.idade}
                   devHobby={devs.hobby}
                   devNivel={devs.nivel_id}
                 />
@@ -145,9 +106,6 @@ function Devs() {
           ))}
         </Tbody>
       </Table>
-      <Text mt={4}>
-        <AddDevModal />
-      </Text>
       <Box display="flex" justifyContent="center" mt={4}>
         <ButtonGroup variant="outline" size="sm">
           <Button
@@ -157,15 +115,13 @@ function Devs() {
             Previous
           </Button>
           <Button
-            isDisabled={endIndex >= sortedData.length}
+            isDisabled={endIndex >= sortedItems.length}
             onClick={() => setCurrentPage(currentPage + 1)}
           >
             Next
           </Button>
         </ButtonGroup>
       </Box>
-    </Container>
+    </>
   );
 }
-
-export default Devs;

@@ -20,14 +20,12 @@ export default function EditDevModal({
   devId,
   devNome,
   devSexo,
-  devIdade,
   devHobby,
   devNivel,
 }: {
   devId: number;
   devNome: string;
   devSexo: string;
-  devIdade: number;
   devHobby: string;
   devNivel: string;
 }) {
@@ -36,8 +34,8 @@ export default function EditDevModal({
 
   const [newNome, setNewNome] = useState<string>(devNome);
   const [newSexo, setNewSexo] = useState<string>(devSexo);
-  const [newDataNascimento, setNewDataNascimento] = useState("");
-  const [newIdade, setNewIdade] = useState<number>(devIdade);
+  const [dataNascimento, setDataNascimento] = useState("");
+  const [idade, setIdade] = useState("");
   const [newHobby, setNewHobby] = useState<string>(devHobby);
   const [newNivel, setNewNivel] = useState<string>(devNivel);
 
@@ -53,8 +51,8 @@ export default function EditDevModal({
           body: JSON.stringify({
             nome: newNome,
             sexo: newSexo,
-            dataNascimento: newDataNascimento,
-            idade: newIdade,
+            dataNascimento: dataNascimento,
+            idade: idade,
             hobby: newHobby,
             nivel_id: newNivel,
           }),
@@ -137,6 +135,19 @@ export default function EditDevModal({
     fetchData();
   }, []);
 
+  const calcularIdade = (dataNascimento: string) => {
+    const dataNascimentoObj = new Date(dataNascimento);
+    const dataAtualObj = new Date();
+
+    const diferencaEmMilissegundos =
+      dataAtualObj.getTime() - dataNascimentoObj.getTime();
+    const idadeEmAnos = Math.floor(
+      diferencaEmMilissegundos / (1000 * 60 * 60 * 24 * 365)
+    );
+
+    setIdade(idadeEmAnos.toString());
+  };
+
   return (
     <>
       <Button onClick={onOpen} size="sm">
@@ -156,24 +167,24 @@ export default function EditDevModal({
                 onChange={(e) => setNewNome(e.target.value)}
               />
               <FormLabel>Sexo</FormLabel>
-              <Input
-                type="text"
-                value={newSexo}
+              <Select
+                placeholder={newSexo}
                 onChange={(e) => setNewSexo(e.target.value)}
-              />
+              >
+                <option value="Masc">Masc </option>
+                <option value="Fem">Fem </option>
+              </Select>
               <FormLabel>Data de Nascimento</FormLabel>
               <Input
                 type="date"
-                value={newDataNascimento}
-                onChange={(e) => setNewDataNascimento(e.target.value)}
+                value={dataNascimento}
+                onChange={(e) => {
+                  setDataNascimento(e.target.value);
+                  calcularIdade(e.target.value);
+                }}
               />
-
               <FormLabel>Idade</FormLabel>
-              <Input
-                type="number"
-                value={newIdade}
-                onChange={(e) => setNewIdade(parseInt(e.target.value))}
-              />
+              <Input type="number" value={idade} readOnly />
 
               <FormLabel>Hobby</FormLabel>
               <Input
