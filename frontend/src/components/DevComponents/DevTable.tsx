@@ -10,13 +10,15 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import EditDevModal from "./EditDevModal";
-import { Devs } from "../interface/interfaces";
+import DeleteDevAlert from "./DeleteDevAlert";
+import { Devs, Nivel } from "../../interface/interfaces";
 import { useEffect, useState } from "react";
-import { useSortableData } from "./sortData";
+import { SortDevData } from "./SortDevData";
+import { api } from "../../services/api";
 
 export default function DevTable() {
   const [data, setData] = useState<Devs[]>([]);
-  const { sortedItems, handleSort } = useSortableData(data);
+  const { sortedItems, handleSort } = SortDevData(data);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 4;
   const startIndex = currentPage * itemsPerPage;
@@ -26,9 +28,23 @@ export default function DevTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/developers");
-        const jsonData = await response.json();
+        const response = await api.get("/developers");
+        const jsonData = response.data;
         setData(jsonData);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const [nivelData, setNivelData] = useState<Nivel[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/nivel");
+        const jsonData = response.data;
+        setNivelData(jsonData);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -81,6 +97,7 @@ export default function DevTable() {
               Nivel
             </Th>
             <Th></Th>
+            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -92,7 +109,11 @@ export default function DevTable() {
               <Td>{devs.dataNascimento}</Td>
               <Td>{devs.idade}</Td>
               <Td>{devs.hobby}</Td>
-              <Td>{devs.nivel_id}</Td>
+              {nivelData
+                .filter((nivel) => nivel.id === +devs.nivel_id)
+                .map((filteredNivel) => (
+                  <Td key={filteredNivel.id}>{filteredNivel.nivel}</Td>
+                ))}
               <Td>
                 <EditDevModal
                   devId={devs.id}
@@ -101,6 +122,9 @@ export default function DevTable() {
                   devHobby={devs.hobby}
                   devNivel={devs.nivel_id}
                 />
+              </Td>
+              <Td>
+                <DeleteDevAlert devId={devs.id} />
               </Td>
             </Tr>
           ))}
@@ -112,13 +136,13 @@ export default function DevTable() {
             isDisabled={currentPage === 0}
             onClick={() => setCurrentPage(currentPage - 1)}
           >
-            Previous
+            Anterior
           </Button>
           <Button
             isDisabled={endIndex >= sortedItems.length}
             onClick={() => setCurrentPage(currentPage + 1)}
           >
-            Next
+            Proximo
           </Button>
         </ButtonGroup>
       </Box>

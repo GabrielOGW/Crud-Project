@@ -14,6 +14,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { api } from "../../services/api";
 
 export default function EditNivelModal({
   nivelId,
@@ -28,27 +29,18 @@ export default function EditNivelModal({
 
   const handleUpdate = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/nivel/${nivelId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nivel: newNivel,
-        }),
+      const payload = {
+        nivel: newNivel,
+      };
+
+      await api.patch(`/nivel/${nivelId}`, payload);
+      toast({
+        title: "Nivel alterado.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
-      if (response.ok) {
-        console.log(response);
-        toast({
-          title: "Nivel alterado.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        onClose();
-      } else {
-        throw new Error("Failed to update nivel");
-      }
+      onClose();
     } catch (error) {
       console.error(error);
       toast({
@@ -57,37 +49,7 @@ export default function EditNivelModal({
         duration: 5000,
         isClosable: true,
       });
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/nivel/${nivelId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        console.log(response);
-        toast({
-          title: "Nivel excluido.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        onClose();
-      } else {
-        throw new Error("Failed to delete nivel");
-      }
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Erro ao excluir nivel.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      onClose();
     }
   };
 
@@ -120,9 +82,9 @@ export default function EditNivelModal({
               borderColor="red.700"
               variant="outline"
               mr={3}
-              onClick={handleDelete}
+              onClick={onClose}
             >
-              Excluir
+              cancelar
             </Button>
           </ModalFooter>
         </ModalContent>

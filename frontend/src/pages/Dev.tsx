@@ -1,6 +1,6 @@
 import { Container, Heading, Text } from "@chakra-ui/react";
-import AddDevModal from "../components/AddDevModal";
-import DevTable from "../components/DevTable";
+import AddDevModal from "../components/DevComponents/AddDevModal";
+import DevTable from "../components/DevComponents/DevTable";
 
 function Dev() {
   return (

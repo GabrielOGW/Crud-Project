@@ -14,6 +14,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { api } from "../../services/api";
 
 export default function AddNivelModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,35 +23,27 @@ export default function AddNivelModal() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3000/nivel", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nivel,
-        }),
+      const payload = {
+        nivel: nivel,
+      };
+
+      await api.post(`/nivel`, payload);
+      toast({
+        title: "Nivel criado.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
-      if (response.ok) {
-        console.log(response);
-        toast({
-          title: "Nivel criado.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        onClose();
-      } else {
-        throw new Error("Failed to create dev");
-      }
-    } catch (error) {
+      onClose();
+    } catch (error: any) {
       console.error(error);
       toast({
-        title: "Erro ao criar dev.",
+        title: "Erro ao criar nivel.",
         status: "error",
         duration: 5000,
         isClosable: true,
       });
+      onClose();
     }
   };
 
@@ -75,10 +68,7 @@ export default function AddNivelModal() {
               type="submit"
               colorScheme="blue"
               mr={3}
-              onClick={() => {
-                handleSubmit();
-                onClose();
-              }}
+              onClick={handleSubmit}
             >
               Adicionar
             </Button>

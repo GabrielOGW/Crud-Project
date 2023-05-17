@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -15,64 +14,75 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { Nivel } from "../interface/interfaces";
+import { useEffect, useState } from "react";
+import { api } from "../../services/api";
 
-export default function AddDevModal() {
+export default function EditDevModal({
+  devId,
+  devNome,
+  devSexo,
+  devHobby,
+  devNivel,
+}: {
+  devId: number;
+  devNome: string;
+  devSexo: string;
+  devHobby: string;
+  devNivel: string;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
-  const [nome, setNome] = useState("");
-  const [sexo, setSexo] = useState("");
+  const [newNome, setNewNome] = useState<string>(devNome);
+  const [newSexo, setNewSexo] = useState<string>(devSexo);
   const [dataNascimento, setDataNascimento] = useState("");
   const [idade, setIdade] = useState("");
-  const [hobby, setHobby] = useState("");
-  const [nivel_id, setNivel_id] = useState("");
+  const [newHobby, setNewHobby] = useState<string>(devHobby);
+  const [newNivel, setNewNivel] = useState<string>(devNivel);
 
-  const handleSubmit = async () => {
+  const handleUpdate = async () => {
     try {
-      const response = await fetch("http://localhost:3000/developers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nome,
-          sexo,
-          dataNascimento,
-          idade,
-          hobby,
-          nivel_id,
-        }),
+      const payload = {
+        nome: newNome,
+        sexo: newSexo,
+        nasci: dataNascimento,
+        idade: idade,
+        hobby: newHobby,
+        nivel_id: newNivel,
+      };
+
+      await api.patch(`/developers/${devId}`, payload);
+      toast({
+        title: "Dev alterado.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
       });
-      if (response.ok) {
-        toast({
-          title: "Dev criado.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        onClose();
-      } else {
-        throw new Error("Failed to create dev");
-      }
+      onClose();
     } catch (error) {
       console.error(error);
       toast({
-        title: "Erro ao criar dev.",
+        title: "Erro ao alterar dev.",
         status: "error",
         duration: 5000,
         isClosable: true,
       });
+      onClose();
     }
   };
+
+  interface Nivel {
+    id: number;
+    nivel: string;
+  }
 
   const [data, setData] = useState<Nivel[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/nivel");
-        const jsonData = await response.json();
+        const response = await api.get("/nivel");
+        const jsonData = response.data;
         setData(jsonData);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -96,22 +106,26 @@ export default function AddDevModal() {
 
   return (
     <>
-      <Button colorScheme="blue" size="sm" onClick={() => onOpen()}>
-        Add Dev
+      <Button onClick={onOpen} size="sm">
+        Visualizar
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay backdropFilter="blur(1px)" />
         <ModalContent>
-          <ModalHeader>Novo Desenvolvedor</ModalHeader>
+          <ModalHeader>Editar Desenvolvedor</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
               <FormLabel>Nome</FormLabel>
-              <Input type="text" onChange={(e) => setNome(e.target.value)} />
+              <Input
+                type="text"
+                value={newNome}
+                onChange={(e) => setNewNome(e.target.value)}
+              />
               <FormLabel>Sexo</FormLabel>
               <Select
-                placeholder="Informe o Sexo"
-                onChange={(e) => setSexo(e.target.value)}
+                placeholder={newSexo}
+                onChange={(e) => setNewSexo(e.target.value)}
               >
                 <option value="Masc">Masc </option>
                 <option value="Fem">Fem </option>
@@ -127,12 +141,17 @@ export default function AddDevModal() {
               />
               <FormLabel>Idade</FormLabel>
               <Input type="number" value={idade} readOnly />
+
               <FormLabel>Hobby</FormLabel>
-              <Input type="text" onChange={(e) => setHobby(e.target.value)} />
+              <Input
+                type="text"
+                value={newHobby}
+                onChange={(e) => setNewHobby(e.target.value)}
+              />
               <FormLabel>Nivel</FormLabel>
               <Select
-                placeholder="Selecione o nível"
-                onChange={(e) => setNivel_id(e.target.value)}
+                value={newNivel}
+                onChange={(e) => setNewNivel(e.target.value)}
               >
                 {data.map((nivel) => (
                   <option key={nivel.id} value={nivel.id}>
@@ -143,10 +162,16 @@ export default function AddDevModal() {
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
-              Adicionar
+            <Button colorScheme="blue" mr={3} onClick={handleUpdate}>
+              Alterar
             </Button>
-            <Button colorScheme="red" variant="outline" onClick={onClose}>
+            <Button
+              colorScheme="red"
+              borderColor="red.700"
+              variant="outline"
+              mr={3}
+              onClick={onClose}
+            >
               Cancelar
             </Button>
           </ModalFooter>

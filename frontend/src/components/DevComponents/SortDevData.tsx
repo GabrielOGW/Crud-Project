@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Devs } from "../interface/interfaces";
+import { Devs } from "../../interface/interfaces";
 
 type SortBy = {
   key: keyof Devs;
   ascending: boolean;
 };
 
-export const useSortableData = (items: Devs[]) => {
+export const SortDevData = (items: Devs[]) => {
   const [sortBy, setSortBy] = useState<SortBy>({ key: "id", ascending: true });
 
   const sortedItems = [...items].sort((a, b) => {

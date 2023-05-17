@@ -1,6 +1,6 @@
 import { Container, Heading, Text } from "@chakra-ui/react";
-import AddNivelModal from "../components/AddNivelModal";
-import NivelTable from "../components/NivelTable";
+import AddNivelModal from "../components/NivelComponents/AddNivelModal";
+import NivelTable from "../components/NivelComponents/NivelTable";
 
 function Niveis() {
   return (
