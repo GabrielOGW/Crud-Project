@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Dev } from './../entities/dev.entity';
@@ -16,7 +16,10 @@ export class DeleteDevService {
   async remove(id: number): Promise<void> {
     const dev = await this.devRepository.findOne({ where: { id } });
     if (!dev) {
-      throw new Error(`Dev with id ${id} not found.`);
+      throw new HttpException(
+        `Dev with id ${id} not found.`,
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     await this.devRepository.delete(id);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Nivel } from '../entities/nivel.entity';
@@ -14,6 +14,8 @@ export class CreateNivelService {
   async create(createNivelDto: CreateNivelDto): Promise<Nivel> {
     const nivel = new Nivel();
     nivel.nivel = createNivelDto.nivel;
-    return await this.nivelRepository.save(nivel);
+    await this.nivelRepository.save(nivel);
+
+    throw new HttpException('Nivel created successfully.', HttpStatus.CREATED);
   }
 }

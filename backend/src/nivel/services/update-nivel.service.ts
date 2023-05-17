@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Nivel } from './../entities/nivel.entity';
@@ -14,7 +14,10 @@ export class UpdateNivelService {
   async update(id: number, updateNivelDto: UpdateNivelDto): Promise<Nivel> {
     const nivel = await this.nivelRepository.findOne({ where: { id } });
     if (!nivel) {
-      throw new Error(`Nivel with id ${id} not found.`);
+      throw new HttpException(
+        `Nivel with id ${id} not found.`,
+        HttpStatus.NOT_FOUND,
+      );
     }
     Object.assign(nivel, updateNivelDto);
     return this.nivelRepository.save(nivel);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Nivel } from './../entities/nivel.entity';
@@ -16,10 +16,16 @@ export class DeleteNivelService {
   async remove(id: number): Promise<void> {
     const nivel = await this.nivelRepository.findOne({ where: { id } });
     if (!nivel) {
-      throw new Error(`Nivel with id ${id} not found.`);
+      throw new HttpException(
+        `Nivel with id ${id} not found.`,
+        HttpStatus.NOT_FOUND,
+      );
     }
     if (nivel.devs.length > 0) {
-      throw new Error(`Nivel with id ${id} has associated Devs.`);
+      throw new HttpException(
+        `Nivel with id ${id} has associated Devs.`,
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     await this.nivelRepository.delete(id);
   }
