@@ -34,12 +34,11 @@ export default function AddDevModal() {
       const payload = {
         nome: nome,
         sexo: sexo,
-        nasci: dataNascimento,
+        dataNascimento: dataNascimento,
         idade: idade,
         hobby: hobby,
         nivel_id: nivel_id,
       };
-
       await api.post(`/developers`, payload);
       toast({
         title: "Dev criado.",
@@ -49,7 +48,6 @@ export default function AddDevModal() {
       });
       onClose();
     } catch (error: any) {
-      console.error(error);
       toast({
         title: "Erro ao criar Dev.",
         status: "error",

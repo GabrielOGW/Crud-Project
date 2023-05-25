@@ -45,7 +45,7 @@ export default function EditDevModal({
       const payload = {
         nome: newNome,
         sexo: newSexo,
-        nasci: dataNascimento,
+        dataNascimento: dataNascimento,
         idade: idade,
         hobby: newHobby,
         nivel_id: newNivel,
@@ -60,7 +60,6 @@ export default function EditDevModal({
       });
       onClose();
     } catch (error) {
-      console.error(error);
       toast({
         title: "Erro ao alterar dev.",
         status: "error",
