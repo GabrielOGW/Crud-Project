@@ -15,11 +15,14 @@ import { Devs, Nivel } from "../../interface/interfaces";
 import { useEffect, useState } from "react";
 import { SortDevData } from "./SortDevData";
 import { api } from "../../services/api";
+import useRefresh from "../../hook/useRefresh";
+import AddDevModal from "./AddDevModal";
 
 export default function DevTable() {
   const [data, setData] = useState<Devs[]>([]);
   const { sortedItems, handleSort } = SortDevData(data);
   const [currentPage, setCurrentPage] = useState(0);
+  const { refresh, handleRefresh } = useRefresh();
   const itemsPerPage = 4;
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -36,7 +39,7 @@ export default function DevTable() {
       }
     };
     fetchData();
-  }, []);
+  }, [refresh]);
 
   const [nivelData, setNivelData] = useState<Nivel[]>([]);
   useEffect(() => {
@@ -121,10 +124,11 @@ export default function DevTable() {
                   devSexo={devs.sexo}
                   devHobby={devs.hobby}
                   devNivel={devs.nivel_id}
+                  onRefresh={handleRefresh}
                 />
               </Td>
               <Td>
-                <DeleteDevAlert devId={devs.id} />
+                <DeleteDevAlert devId={devs.id} onRefresh={handleRefresh} />
               </Td>
             </Tr>
           ))}
@@ -146,6 +150,7 @@ export default function DevTable() {
           </Button>
         </ButtonGroup>
       </Box>
+      <AddDevModal onRefresh={handleRefresh} />
     </>
   );
 }

@@ -18,7 +18,7 @@ import {
 import { Nivel } from "../../interface/interfaces";
 import { api } from "../../services/api";
 
-export default function AddDevModal() {
+export default function AddDevModal({ onRefresh }: { onRefresh: any }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -43,15 +43,16 @@ export default function AddDevModal() {
       toast({
         title: "Dev criado.",
         status: "success",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();
+      onRefresh();
     } catch (error: any) {
       toast({
         title: "Erro ao criar Dev.",
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();

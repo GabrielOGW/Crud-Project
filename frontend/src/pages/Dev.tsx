@@ -1,5 +1,4 @@
 import { Container, Heading, Text } from "@chakra-ui/react";
-import AddDevModal from "../components/DevComponents/AddDevModal";
 import DevTable from "../components/DevComponents/DevTable";
 
 function Dev() {
@@ -10,9 +9,7 @@ function Dev() {
           Devs
         </Heading>
         <DevTable />
-        <Text mt={4}>
-          <AddDevModal />
-        </Text>
+        <Text mt={4}></Text>
       </Container>
     </>
   );

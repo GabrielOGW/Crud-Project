@@ -12,7 +12,13 @@ import {
 import { useRef } from "react";
 import { api } from "../../services/api";
 
-export default function DeleteNivelAlert({ nivelId }: { nivelId: number }) {
+export default function DeleteNivelAlert({
+  nivelId,
+  onRefresh,
+}: {
+  nivelId: number;
+  onRefresh: any;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const toast = useToast();
@@ -23,17 +29,18 @@ export default function DeleteNivelAlert({ nivelId }: { nivelId: number }) {
       toast({
         title: "Nivel excluido.",
         status: "success",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();
+      onRefresh();
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         toast({
           title: "Erro ao excluir nivel.",
           description: `Nivel com o id: ${nivelId} possui desenvolvedores vinculados.`,
           status: "error",
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         });
         onClose();
@@ -42,7 +49,7 @@ export default function DeleteNivelAlert({ nivelId }: { nivelId: number }) {
           title: "Erro ao excluir nivel.",
           description: "Ocorreu um erro ao excluir o nivel.",
           status: "error",
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         });
         onClose();

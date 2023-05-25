@@ -23,16 +23,17 @@ export default function EditDevModal({
   devSexo,
   devHobby,
   devNivel,
+  onRefresh,
 }: {
   devId: number;
   devNome: string;
   devSexo: string;
   devHobby: string;
   devNivel: string;
+  onRefresh: any;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-
   const [newNome, setNewNome] = useState<string>(devNome);
   const [newSexo, setNewSexo] = useState<string>(devSexo);
   const [dataNascimento, setDataNascimento] = useState("");
@@ -55,15 +56,18 @@ export default function EditDevModal({
       toast({
         title: "Dev alterado.",
         status: "success",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();
+      onRefresh();
     } catch (error) {
+      console.log(error);
+      
       toast({
         title: "Erro ao alterar dev.",
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();

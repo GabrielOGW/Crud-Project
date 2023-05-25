@@ -19,9 +19,11 @@ import { api } from "../../services/api";
 export default function EditNivelModal({
   nivelId,
   nivelName,
+  onRefresh,
 }: {
   nivelId: number;
   nivelName: string;
+  onRefresh: any;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -37,16 +39,17 @@ export default function EditNivelModal({
       toast({
         title: "Nivel alterado.",
         status: "success",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();
+      onRefresh();
     } catch (error) {
       console.error(error);
       toast({
         title: "Erro ao alterar nivel.",
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();

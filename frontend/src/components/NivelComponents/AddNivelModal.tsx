@@ -16,7 +16,7 @@ import {
 import { useState } from "react";
 import { api } from "../../services/api";
 
-export default function AddNivelModal() {
+export default function AddNivelModal({ onRefresh }: { onRefresh: any }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [nivel, setNivel] = useState("");
@@ -31,16 +31,17 @@ export default function AddNivelModal() {
       toast({
         title: "Nivel criado.",
         status: "success",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();
+      onRefresh();
     } catch (error: any) {
       console.error(error);
       toast({
         title: "Erro ao criar nivel.",
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();

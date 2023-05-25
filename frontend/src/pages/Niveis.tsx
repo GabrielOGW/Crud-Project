@@ -1,5 +1,4 @@
 import { Container, Heading, Text } from "@chakra-ui/react";
-import AddNivelModal from "../components/NivelComponents/AddNivelModal";
 import NivelTable from "../components/NivelComponents/NivelTable";
 
 function Niveis() {
@@ -10,9 +9,7 @@ function Niveis() {
           Niveis
         </Heading>
         <NivelTable />
-        <Text mt={4}>
-          <AddNivelModal />
-        </Text>
+        <Text mt={4}></Text>
       </Container>
     </>
   );

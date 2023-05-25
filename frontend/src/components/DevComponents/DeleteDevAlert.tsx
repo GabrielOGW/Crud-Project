@@ -12,7 +12,13 @@ import {
 import { useRef } from "react";
 import { api } from "../../services/api";
 
-export default function DeleteDevAlert({ devId }: { devId: number }) {
+export default function DeleteDevAlert({
+  devId,
+  onRefresh,
+}: {
+  devId: number;
+  onRefresh: any;
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const toast = useToast();
@@ -23,17 +29,18 @@ export default function DeleteDevAlert({ devId }: { devId: number }) {
       toast({
         title: "Dev excluido.",
         status: "success",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
       onClose();
+      onRefresh();
     } catch (error: any) {
       {
         toast({
           title: "Erro ao excluir Dev.",
           description: "Ocorreu um erro ao excluir o desenvolvedor.",
           status: "error",
-          duration: 5000,
+          duration: 3000,
           isClosable: true,
         });
         onClose();

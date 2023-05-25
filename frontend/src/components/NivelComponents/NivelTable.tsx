@@ -10,16 +10,19 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import EditNivelModal from "./EditNivelModal";
+import AddNivelModal from "../NivelComponents/AddNivelModal";
+import DeleteNivelAlert from "./DeleteNivelAlert";
 import { Nivel } from "../../interface/interfaces";
 import { useEffect, useState } from "react";
 import { SortNivelData } from "./SortNivelData";
-import DeleteNivelAlert from "./DeleteNivelAlert";
 import { api } from "../../services/api";
+import useRefresh from "../../hook/useRefresh";
 
 export default function NivelTable() {
   const [data, setData] = useState<Nivel[]>([]);
   const { sortedItems, handleSort } = SortNivelData(data);
   const [currentPage, setCurrentPage] = useState(0);
+  const { refresh, handleRefresh } = useRefresh();
   const itemsPerPage = 4;
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -36,7 +39,7 @@ export default function NivelTable() {
       }
     };
     fetchData();
-  }, []);
+  }, [refresh]);
 
   return (
     <>
@@ -69,10 +72,17 @@ export default function NivelTable() {
               <Td>{nivel.nivel}</Td>
               <Td>{nivel.devs.length}</Td>
               <Td>
-                <EditNivelModal nivelId={nivel.id} nivelName={nivel.nivel} />
+                <EditNivelModal
+                  nivelId={nivel.id}
+                  nivelName={nivel.nivel}
+                  onRefresh={handleRefresh}
+                />
               </Td>
               <Td>
-                <DeleteNivelAlert nivelId={nivel.id} />
+                <DeleteNivelAlert
+                  nivelId={nivel.id}
+                  onRefresh={handleRefresh}
+                />
               </Td>
             </Tr>
           ))}
@@ -94,6 +104,7 @@ export default function NivelTable() {
           </Button>
         </ButtonGroup>
       </Box>
+      <AddNivelModal onRefresh={handleRefresh} />
     </>
   );
 }
